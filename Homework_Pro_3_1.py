@@ -4,7 +4,7 @@ class Goods:
         self.price = price
 
     def price_control (name, price):   
-        if not is_number_float (price) or float(price) > 0:
+        if not is_number_float (price) or float(price) <= 0:
             err = My_exceptions ("Invalid price characters")
             return err.get_exception_message()
         else:
