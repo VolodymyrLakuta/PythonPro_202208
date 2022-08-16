@@ -4,11 +4,9 @@ class Goods:
         self.price = price
 
     def price_control (name, price):   
-        try:
-            if not is_number_float (price) or not float(price):
-                raise My_exceptions ("Invalid price characters")
-        except My_exceptions as err:
-            print(err.get_exception_message())
+        if not is_number_float (price) or not float(price):
+            err = My_exceptions ("Invalid price characters")
+            return err.get_exception_message()
         else:
             price = round(float(price), 2)
             good = Goods(name, price)
@@ -23,7 +21,7 @@ class My_exceptions (Exception):
         self.message = message
 
     def get_exception_message(self):
-        return self.message 
+        return f"{self.message}"
 
 def is_number_float (val):
     try:
