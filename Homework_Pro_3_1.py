@@ -7,11 +7,9 @@ class Goods:
         if not is_number_float (price) or float(price) <= 0:
             err = My_exceptions ("Invalid price characters")
             return err.get_exception_message()
-        else:
-            price = round(float(price), 2)
-            good = Goods(name, price)
-            return good
-        
+        price = round(float(price), 2)
+        return Goods(name, price)
+                     
     def  __str__(self):
         return f"\n{self.name} Price: ${self.price}\n"
 
