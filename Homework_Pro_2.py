@@ -1,147 +1,95 @@
 class Human:
-    def __init__(self, surname, name, gender, year_birth):
+    def __init__(self, surname : str, name : str, year_birth : str):
         self.surname = surname
         self.name = name
-        self.gender = gender
         self.year_birth = year_birth
       
     def  __str__(self):
-        return f"{self.surname} {self.name}, {self.gender}, {self.year_birth}\n"
+        return f"{self.surname} {self.name}, {self.year_birth}\n"
 
 class Students(Human):
-    student_list = []
-
-    def __init__(self, surname, name, gender, year_birth, phone_num):
-       super().__init__(surname, name, gender, year_birth)
+    
+    def __init__(self, surname : str, name : str, year_birth : str, phone_num : str):
+       super().__init__(surname, name, year_birth)
        self.phone_num = phone_num
-       self.student_dict = {}
-       
-    def stud_list (self):     # Список студентів
-        self.student_dict = {
-                    "Surname" : self.surname, "Name" : self.name, "Gender" : self.gender, 
-                    "Year_birth" : self.year_birth, "Phone_num" : self.phone_num
-                     }    
-        Students.student_list.append(self.student_dict)
-        return Students.student_list
-
+              
     def  __str__(self):
-        return f"{self.surname} {self.name}, {self.year_birth}, phone {self.phone_num}"
-
-    def add_new_student ():
-        surname, name, gender, year_birth, phone_num = input ("Input the student (5 attr): ").split() 
-        # Новий студент
-        student = {
-                    "Surname" : surname, "Name" : name, "Gender" : gender, 
-                    "Year_birth" : year_birth, "Phone_num" : phone_num
-                     }
-        Students.student_list.append(student)
-        return student
+        return f"{super().__str__().rstrip()}, phone {self.phone_num}"
 
 class Group:
     def __init__(self, title):
         self.title = title
         self.group_list = []
 
-    def create_group_list (self, student_list): # Створення початкового списку групи із списку студентів
-        for student in student_list:
-            print ("\n", student)
-            ans = input(f'''Add this student to the group "{self.title}"? y/n: ''')
-            if len(self.group_list) == 10:
-                print ("\nThere should not be more than ten students in a group\n")
-                break
-            if ans =="y" and student in self.group_list:
-                print ("\nThis student is already in the group list\n")
-            elif ans =="y":
-                self.group_list.append(student)
-        return self.group_list
-
-    def add_new_student (self, student):
-        if len(self.group_list) == 10:
-            print ("\nThere should not be more than ten students in a group\n")
-        else:
-            if student in self.group_list:
-               print ("\nThis student is already in the group list\n")
-            else:
-               self.group_list.append(student)
-        return self.group_list
-
-    def search_student (self, student_name):         # Пошук студентів за прізвищем
-        k = 0             
-        for i, student in enumerate(self.group_list):
-            if student.get("Surname") == student_name:
-                k += 1
-                print (f"\n{i+1}. {student.get('Surname')} {student.get('Name')}")
-                ans = input ("\nContinue? y/n: ")
-                if ans != "y":
-                    break
-        if k:
-            print (f"\nStudents found: {k}")
-        else:
-            print (f'''Student with surname "{student_name}" in the group "{self.title}" not found''')
+    def add_new_student (self, student : Students, MAX_GR = 10):
+        if len(self.group_list) == MAX_GR:
+            raise My_exceptions("The group is already dialed")
+        for item in self.group_list:
+            if item.surname.lower() == student.surname.lower() and \
+                item.name.lower() == student.name.lower() and \
+                item.year_birth == student.year_birth:
+                raise My_exceptions("This student is already in the group")
+        
+        self.group_list.append(student)
+        
+    def search_student (self, student_name):         # Пошук студентів за призвіщем
+        for item in self.group_list:
+            if item.surname.lower() == student_name.lower():
+                return item
+        raise My_exceptions("Not found")
 
     def del_student (self, student_name):              # Видалення студента (пошук за призвіщем)
-        k = 0
-        for i, student in enumerate(self.group_list):
-            if student.get("Surname") == student_name:
-                print (f"\n{i+1}. {student.get('Surname')} {student.get('Name')}")
-                ans = input (f"\nDelete this student? y/n: ")
-                if ans == "y":
-                    del self.group_list[i]
-                    k += 1
-                ans = input ("\nContinue? y/n: ")
-                if ans != "y":
-                    break
-        if k:
-            print (f"\nDeleted students: {k}")
-        else: 
-            print (f'''Student with surname "{student_name}" in the group "{self.title}" not found''')
-
+        for item in self.group_list:
+            if item.surname.lower() == student_name.lower():
+                self.group_list.remove(item)
+                return
+        raise My_exceptions("Not found")
+     
     def __str__ (self):
-        print (f"\n{self.title}\n")
-        for i, student in enumerate(self.group_list):
-            print (f"{i+1}. {student.get('Surname')} {student.get('Name')}")            
+        return f'{self.title}\n' + '\n'.join(map(str, self.group_list))
+
+class My_exceptions (Exception):
+    def __init__(self, message):
+        super().__init__()
+        self.message = message
+
+    def get_exception_message(self):
+        return f"{self.message}"            
         
-def create_students_list():                 # Використовується текстовий файл (є дубльовані студенти)
-    filename = input("Input the student list file name: ")
+def create_students_list(filename):                 # Використовується текстовий файл (є дубльовані студенти)
+    list_students = []
     with open (filename, "r") as list_file:
         lines = list_file.readlines()
         del (lines[-1])                    # Видалення знаку переносу рядка
         for item in lines:
-            item_1 = item[0:-1]            # Видалення знаку переносу рядка
-            surname, name, gender, year_birth, phone_num = item_1.split()
-            student = Students (surname, name, gender, year_birth, phone_num)
-            student.stud_list()
-            print (student)
+            item = item.rstrip()            # Видалення знаку переносу рядка
+            surname, name, year_birth, phone_num = item.split()
+            student = Students(surname, name, year_birth, phone_num)
+            list_students.append(student)
+    return list_students
 
-create_students_list()                        # Створення списку студентів (Class Students)
+list_student = create_students_list("students")                       # Створення списку студентів (Class Students)
+for item in list_student:
+    print(item)
 
-title = "Python Pro"                           # Створення групи (Class Group) із списку студентів
-group_1 = Group(title)
-group_1.create_group_list(Students.student_list)
-group_1.__str__()
 print()
 
-student_1 = Students.add_new_student()         # Додавання нового студента до списку студентів
+title = "Python Pro"                                   # Створення групи (Class Group) із списку студентів
+group_1 = Group(title)
+for item in list_student[0:9]:
+    group_1.add_new_student(item)
+print(group_1)
 
-print ("\n", student_1, "\n")
+print()
 
-print(Students.student_list)                   # Перевірка додавання студента до списку студентів (останній)
+st_1 = Students("Lakuta", "Volodymyr", "1999", "0349876543")
+group_1.add_new_student(st_1)
+print(group_1)
 
-ans = input (f'''\nAdd this student to the group "{title}"? y/n: ''') # Додавання студента в групу
-if ans == "y":
-    group_1.add_new_student(student_1)
+print()
 
-group_1.__str__()
+print (group_1.search_student("mazur"), "\n")
 
-student_name = input ("\nInput surname of student for search: ")  # Пошук студента за призвіщем
-group_1.search_student(student_name)
+group_1.del_student("mazur")
 
-student_name = input ("\nInput surname of student for delete: ")  # Видалення студента
-group_1.del_student(student_name)
-
-group_1.__str__()
-
-
-
-
-
+print(group_1)
