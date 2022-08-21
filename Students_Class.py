@@ -1,6 +1,6 @@
-import Human_Class as H_cl
+from Human_Class import Human
 
-class Students(H_cl.Human):
+class Students(Human):
     
     def __init__(self, surname : str, name : str, year_birth : str, phone_num : str):
        super().__init__(surname, name, year_birth)
