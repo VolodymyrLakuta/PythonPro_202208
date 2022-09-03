@@ -3,9 +3,8 @@
 import random
 
 def sum_sequince(sequince, pov_func):
-    for elem in sequince:
-        if not isinstance(elem, (int, float)):
-            return TypeError
+    if not all(isinstance(x, (int, float)) for x in sequince):
+        return TypeError
     res = 0
     for elem in sequince:
         res += pov_func(elem)
