@@ -1,15 +1,15 @@
 # Task 1
 counter = {}
 
-def count_func_call(f):
+def count_func_call(func):
     count = 0
-    name_f =f.__name__
+    name_func = func.__name__
     def count_call(*args):
         nonlocal count
-        nonlocal name_f
-        f(*args)
+        nonlocal name_func
+        func(*args)
         count += 1
-        counter[name_f] = count
+        counter[name_func] = count
         return
     return count_call
     
