@@ -1,21 +1,31 @@
 # Task 1
+counter = {}
 
 def count_func_call(f):
     count = 0
-    def count_call():
+    name_f =f.__name__
+    def count_call(*args):
         nonlocal count
-        f()
+        nonlocal name_f
+        f(*args)
         count += 1
-        return count
+        counter[name_f] = count
+        return
     return count_call
     
 
 @count_func_call
-def hello():
-    print("hello world")
+def hello(text):
+    print(f"Hello {text}")
+
+text = "world"
 
 for i in range(1, 5):
-    print(hello())
+    hello(text)
+
+print (counter)
+
+
 
 
 
