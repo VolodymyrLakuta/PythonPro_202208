@@ -12,8 +12,8 @@ def fibonachi_recursion(n):
         return fibonachi_recursion(n - 2) + fibonachi_recursion(n - 1)
 
 f = fibonachi_recursion       # Revise
-print (f(9))
-print(timeit.timeit("fibonachi_recursion(9)", setup="from __main__ import fibonachi_recursion", number=20))
+print (f(2))
+print(timeit.timeit("fibonachi_recursion(2)", setup="from __main__ import fibonachi_recursion", number=20))
 
 
 '''
@@ -32,8 +32,8 @@ def fibonachi_closure():
         return res[-1]
     return get_next
 
-f = fibonachi_closure()     # Revise
-print (f(9))
+f = fibonachi_closure()    # Revise
+print (f(2))
 print(timeit.timeit("fibonachi_closure()", setup="from __main__ import fibonachi_closure", number=20))
 
 '''
@@ -53,8 +53,8 @@ def fibonachi_memo(func):
     return get_next
 
 f = fibonachi_memo(fibonachi_recursion)       # Revise
-print (f(9))
-print(timeit.timeit("fibonachi_memo(fibonachi_recursion(9))", setup="from __main__ import fibonachi_memo, fibonachi_recursion", number=20))
+print (f(2))
+print(timeit.timeit("fibonachi_memo(fibonachi_recursion(2))", setup="from __main__ import fibonachi_memo, fibonachi_recursion", number=20))
 
 
 
