@@ -1,21 +1,5 @@
-class MyDescriptor:
-    def __init__(self, value):
-        self.value = value
-    
-    def __get__(self, instance_self, instance_class):
-        return self.value
-
-    def __set__(self, instance_self, value):
-        raise AttributeError("Field is read-only")
-
-    def __delete__(self, instance_self):
-        raise AttributeError("Cannot delete field")
-
-
 
 class Goods:
-
-    taxfee = MyDescriptor(20)
 
     def __init__(self, name : str, price : int | float):
         self.name = name
@@ -23,6 +7,17 @@ class Goods:
             raise TypeError ("Invalid price characters")
         else:
             self.price = round(price, 2)
+
+    def getTaxfee(self):
+        return 20
+
+    def setTaxfee(self, value):
+        raise AttributeError("Field is read-only")
+
+    def delTaxfee(self):
+        raise AttributeError("Cannot delete field")
+    
+    taxfee = property(getTaxfee, setTaxfee, delTaxfee)
                        
     def  __str__(self):
         return f"\n{self.name} Price: ${self.price}"
@@ -34,4 +29,6 @@ class Goods:
 t = Goods("banana", 45)
 print(t)
 print(t.taxfee)
-del t.taxfee
+print(t.__dict__)
+print(Goods.__dict__)
+Goods.taxfee = 30
